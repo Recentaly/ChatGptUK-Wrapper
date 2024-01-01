@@ -82,16 +82,16 @@ def chat() -> str:
     model: str = data["model"]
 
     # get temperature from data
-    temperature: int = data["temperature"]
+    temperature: int = data.get("temperature", 0.7)
 
     # get presence penalty from data
-    presence_penalty: int = data["presence_penalty"]
+    presence_penalty: int = data.get("presence_penalty", 0)
 
     # get frequency penalty from data
-    frequency_penalty: int = data["frequency_penalty"]
+    frequency_penalty: int = data.get("frequency_penalty", 0)
 
     # get top p from data
-    top_p: int = data["top_p"]
+    top_p: int = data.get("top_p", 1)
 
     # this route is used if streaming is enabled
     def streaming():
@@ -109,7 +109,7 @@ def chat() -> str:
         yield b'data: [DONE]'
 
     # check if streaming is enabled
-    if data["stream"]:
+    if data.get("stream", True):
 
         # return streamed response
         return Response(streaming(), mimetype='text/event-stream')

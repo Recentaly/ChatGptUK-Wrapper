@@ -85,17 +85,20 @@ class API(object):
             {"id": "gpt-4"},
             {"id": "gpt-4-32k"},
             {"id": "gpt-4-1106-preview"},
+            {"id": "claude-instant-1.2"},
+            {"id": "claude-2.0"},
+            {"id": "claude-2.1"},
         ]}
 
     # this method allows you to chat with chatgpt
     def chat(self,
-             messages: Messages,
-             model: str,
-             temperature: int = 0.6,
-             presence_penalty: int = 0,
-             frequency_penalty: int = 0,
-             top_p: int = 1,
-            ) -> str:
+            messages: Messages,
+            model: str,
+            temperature: int = 0.6,
+            presence_penalty: int = 0,
+            frequency_penalty: int = 0,
+            top_p: int = 1,
+        ) -> str:
 
         """Chat with ChatGPT"""
 
@@ -118,6 +121,25 @@ class API(object):
             "useTools": self.use_tools,
             "stream": True
         }
+
+        # if model is from anthropic, add a maxTokens key and filter out the suffix
+        if "claude" in model:
+
+            data["max_tokens"] = None
+            data.pop("azureApiVersion", None)
+            data.pop("isAzure", None)
+            data.pop("useTools", None)
+            data.pop("baseUrl", None)
+            data.pop("returnIntermediateSteps", None)
+            data.pop("maxIterations", None)
+
+            # delete first two messages of list (user message MUST be first)
+            for message in data["messages"][:2]:
+
+                if data["messages"][0]["role"] == "assistant" or "system":
+
+                    data["messages"].pop(data["messages"].index(message)) 
+
 
         # logging info
         logger.info(f"Data successfully generated.\n")

@@ -77,7 +77,7 @@ class API(object):
 
         return {"data": [
             {"id": "gpt-3.5-turbo"},
-            {"id": "gpt-3.-turbo-0301"},
+            {"id": "gpt-3.5-turbo-0301"},
             {"id": "gpt-3.5-turbo-1106"},
             {"id": "gpt-3.5-turbo-0613"},
             {"id": "gpt-3.5-turbo-16k"},
